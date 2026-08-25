@@ -228,7 +228,11 @@ def populate_answer_scores(
     result.judge_score = judge_score
     result.judge_reasoning = judge_reasoning
     result.judge_error = judge_error
-    if reference is not None and aic is not None:
+    # ``classify_failure`` reports "judge_error" whenever ``judge_score`` is
+    # None, which cannot distinguish "the judge failed" from "no judge was
+    # configured". Only classify when a judge actually ran, so a correct answer
+    # scored with a reference alone is not labelled a judge failure.
+    if reference is not None and aic is not None and judge is not None:
         result.failure_mode = classify_failure(
             ref_in_chunks=aic,
             judge_score=judge_score,

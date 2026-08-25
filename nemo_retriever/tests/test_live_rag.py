@@ -157,6 +157,9 @@ class TestAnswer:
         assert result.answer_in_context is not None
         assert result.judge_score is None
         assert result.judge_reasoning is None
+        # No judge ran, so there is no judge verdict to classify. Reporting
+        # "judge_error" here would flag a correct answer as a failure.
+        assert result.failure_mode is None
 
     def test_answer_with_reference_and_judge(self):
         """All tiers populated, ``failure_mode`` derived from combined signals."""
